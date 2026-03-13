@@ -1,0 +1,190 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: study-kit
+    description: AI Study Kit Generation
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /study-kit/generate:
+    post:
+      operationId: generateStudyKit
+      tags: [study-kit]
+      summary: Generate AI study kit from PDF text
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateStudyKitBody"
+      responses:
+        "200":
+          description: Study kit generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyKit"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /study-kit/upload:
+    post:
+      operationId: uploadPdf
+      tags: [study-kit]
+      summary: Upload and extract text from a PDF
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: PDF text extracted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractedPdfText"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    ExtractedPdfText:
+      type: object
+      properties:
+        text:
+          type: string
+        pageCount:
+          type: integer
+        fileName:
+          type: string
+      required:
+        - text
+        - pageCount
+        - fileName
+    GenerateStudyKitBody:
+      type: object
+      properties:
+        text:
+          type: string
+        fileName:
+          type: string
+      required:
+        - text
+    Flashcard:
+      type: object
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+      required:
+        - question
+        - answer
+    QuizQuestion:
+      type: object
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+      required:
+        - question
+        - answer
+    StudyPlanDay:
+      type: object
+      properties:
+        day:
+          type: integer
+        title:
+          type: string
+        tasks:
+          type: array
+          items:
+            type: string
+      required:
+        - day
+        - title
+        - tasks
+    StudyKit:
+      type: object
+      properties:
+        summary:
+          type: string
+        flashcards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Flashcard"
+        quizQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuizQuestion"
+        studyPlan:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudyPlanDay"
+        fileName:
+          type: ["string", "null"]
+      required:
+        - summary
+        - flashcards
+        - quizQuestions
+        - studyPlan

@@ -1,0 +1,14 @@
+packages:
+  "framer-motion": "For sophisticated 3D flip animations on flashcards and smooth page transitions"
+  "canvas-confetti": "To provide a delightful celebration effect when the AI study kit generation finishes"
+  "@types/canvas-confetti": "Type definitions for canvas-confetti"
+  "lucide-react": "Beautiful consistent iconography"
+
+images:
+  - path: "artifacts/study-kit/public/images/academic-bg.png"
+    description: "A clean, minimal, abstract background resembling layered high-quality paper and subtle geometric academic shapes (like overlapping pages, a subtle compass curve, or soft light leaks) in warm off-white and soft gold tones. Very subtle, meant to be used as an elegant background."
+    aspect_ratio: "16:9"
+
+notes:
+  - "The API endpoints use standard FormData for upload and JSON for generation, directly called via fetch as requested."
+  - "Download endpoint returns a raw PDF Blob."

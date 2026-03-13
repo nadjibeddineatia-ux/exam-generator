@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+:root {
+  /* Warm, academic, paper-like palette */
+  --background: 40 33% 98%;
+  --foreground: 222 47% 11%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  
+  --primary: 222 47% 20%;
+  --primary-foreground: 40 33% 98%;
+  
+  --secondary: 40 20% 90%;
+  --secondary-foreground: 222 47% 20%;
+  
+  --muted: 40 20% 90%;
+  --muted-foreground: 215 16% 47%;
+  
+  --accent: 35 92% 65%;
+  --accent-foreground: 222 47% 15%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 40 20% 85%;
+  --input: 40 20% 85%;
+  --ring: 222 47% 20%;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 222 47% 11%;
+  --foreground: 40 33% 98%;
+  
+  --card: 222 47% 15%;
+  --card-foreground: 40 33% 98%;
+  
+  --primary: 40 33% 98%;
+  --primary-foreground: 222 47% 20%;
+  
+  --secondary: 222 47% 20%;
+  --secondary-foreground: 40 33% 98%;
+  
+  --muted: 222 47% 20%;
+  --muted-foreground: 215 20% 65%;
+  
+  --accent: 35 92% 65%;
+  --accent-foreground: 222 47% 11%;
+  
+  --border: 222 47% 20%;
+  --input: 222 47% 20%;
+  --ring: 40 33% 98%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground bg-[url('/images/academic-bg.png')] bg-cover bg-fixed bg-center;
+    /* Soft noise overlay to make it feel like premium paper */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight text-primary;
+  }
+}
+
+/* 3D Flip Utilities for Flashcards */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FUTURISTIC LOADER ANIMATIONS
+   ─────────────────────────────────────────────────────────────────────────────
+
+   HOW TO CUSTOMIZE:
+   - Change rotation speed: edit the `animation-duration` values below.
+   - Change glow intensity: edit the `box-shadow` in the .portal-ring-* classes.
+   - Change scan speed: edit the duration in @keyframes portal-scan.
+   - Change progress bar speed: edit the duration in @keyframes portal-progress-fill.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Portal ring rotations — each ring spins at a different speed & direction */
+@keyframes portal-rotate-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes portal-rotate-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* Scan bar sweeps top-to-bottom */
+@keyframes portal-scan {
+  0%   { top: -4px; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Progress bar fills left-to-right, then repeats */
+@keyframes portal-progress-fill {
+  0%   { width: 0%; }
+  80%  { width: 92%; }
+  100% { width: 92%; }
+}
+
+/* Dot blink */
+@keyframes portal-dot-blink {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Core pulse */
+@keyframes portal-core-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(16,185,129,0.5); }
+  50%       { box-shadow: 0 0 36px rgba(74,222,128,0.85), 0 0 60px rgba(74,222,128,0.3); }
+}
+
+/* AI core pulse (purple variant) */
+@keyframes ai-core-pulse-anim {
+  0%, 100% { box-shadow: 0 0 20px rgba(139,92,246,0.5); }
+  50%       { box-shadow: 0 0 36px rgba(167,139,250,0.85), 0 0 60px rgba(139,92,246,0.3); }
+}
+
+/* Text glow pulse */
+@keyframes text-glow-pulse {
+  0%, 100% { text-shadow: 0 0 8px rgba(74,222,128,0.5); }
+  50%       { text-shadow: 0 0 20px rgba(74,222,128,0.9), 0 0 40px rgba(74,222,128,0.4); }
+}
+@keyframes ai-text-glow-pulse {
+  0%, 100% { text-shadow: 0 0 8px rgba(196,181,253,0.5); }
+  50%       { text-shadow: 0 0 20px rgba(196,181,253,0.9), 0 0 40px rgba(139,92,246,0.4); }
+}
+
+/* Icon slow spin */
+@keyframes icon-slow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Apply animations to class names ── */
+
+.portal-ring-1 {
+  animation: portal-rotate-cw 8s linear infinite;
+}
+.portal-ring-2 {
+  animation: portal-rotate-ccw 5s linear infinite;
+}
+.portal-ring-3 {
+  animation: portal-rotate-cw 3.5s linear infinite;
+}
+
+.ai-ring-1 {
+  animation: portal-rotate-cw 9s linear infinite;
+}
+.ai-ring-2 {
+  animation: portal-rotate-ccw 6s linear infinite;
+}
+.ai-ring-3 {
+  animation: portal-rotate-cw 4s linear infinite;
+}
+
+.portal-scan-bar {
+  animation: portal-scan 2.2s linear infinite;
+}
+
+.portal-progress {
+  animation: portal-progress-fill 3s ease-out forwards;
+}
+
+.portal-dot {
+  animation: portal-dot-blink 1s ease-in-out infinite;
+}
+
+.portal-pulse {
+  animation: portal-core-pulse 2s ease-in-out infinite;
+}
+
+.ai-core-pulse {
+  animation: ai-core-pulse-anim 2s ease-in-out infinite;
+}
+
+.portal-text-glow {
+  animation: text-glow-pulse 2s ease-in-out infinite;
+}
+
+.ai-text-glow {
+  animation: ai-text-glow-pulse 2s ease-in-out infinite;
+}
+
+.ai-icon-spin {
+  animation: icon-slow-spin 4s linear infinite;
+}

@@ -1,0 +1,31 @@
+modules = ["nodejs-24"]
+
+[[artifacts]]
+id = "artifacts/api-server"
+
+[[artifacts]]
+id = "artifacts/mockup-sandbox"
+
+[deployment]
+router = "application"
+deploymentTarget = "autoscale"
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[workflows]
+runButton = "Project"
+
+[agent]
+stack = "PNPM_WORKSPACE"
+expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+"exam pass kit" = "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"
